@@ -8,6 +8,7 @@ export default [
         mascote: "Coruja (Edwiges)",
         patrono: "Cervo",
         especialidade: "Sobreviver a Voldemort 😎",
+        vivo: false
     },
     {
         id: 2,
@@ -18,6 +19,7 @@ export default [
         mascote: "Gato (Bichento)",
         patrono: "Lontra",
         especialidade: "Saber tudo de tudo",
+        vivo: true
     },
     {
         id: 3,
@@ -28,6 +30,7 @@ export default [
         mascote: "Rato (Perebas)",
         patrono: "Terrier Jack Russell",
         especialidade: "Xadrez Bruxo",
+        vivo: true
     },
     {
         id: 4,
@@ -38,6 +41,7 @@ export default [
         mascote: "Coruja (não nomeada)",
         patrono: "Desconhecido",
         especialidade: "Ser irritante",
+        vivo: false
     },
     {
         id: 5,
@@ -48,5 +52,6 @@ export default [
         mascote: "Nenhum",
         patrono: "Lebre",
         especialidade: "Ver criaturas imaginárias (ou não) 👻",
+        vivo: true
     },
 ];
