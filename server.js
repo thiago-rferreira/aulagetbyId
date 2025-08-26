@@ -44,10 +44,10 @@ app.get('/bruxos', (req, res) => {
     });
 });
 
-//Post
+// Post
 app.post('/bruxos', (req, res) => {
     // Acessando dados do body
-    const { nome, casa, ano, especialidade, varinha } = req.body;
+    const { nome, casa, ano, varinha, mascote, patrono, especialidade, vivo } = req.body;
     
     console.log('Dados recebidos:', req.body);
     
@@ -63,11 +63,13 @@ app.post('/bruxos', (req, res) => {
     const novoBruxo = {
         id: bruxos.length + 1,
         nome,
-        casa: casa || "Não informada",
-        ano: parseInt(ano) || 1,
+        casa: casa,
+        ano: parseInt(ano),
+        varinha: varinha,
+        mascote: mascote,
+        patrono: patrono,
         especialidade: especialidade || "Em desenvolvimento",
-        varinha: varinha || "A ser descoberta",
-        criadoEm: new Date().toISOString()
+        vivo: vivo
     };
     
     // Adicionar à lista de bruxos
