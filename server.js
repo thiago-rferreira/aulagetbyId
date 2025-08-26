@@ -10,113 +10,75 @@ const app = express();
 app.use(express.json());
 
 // Criar a const da porta
-const serverPort = 3000;
+const serverPort = 3004;
 
 // Rota raiz/principal para ver se esta tudo OK com o server
 app.get("/", (req, res) => {
     res.send("Servidor funcionando...");
 })
 
-// Criar a rota GET Bruxos
-app.get("/bruxos", (req, res) => {
-    if (bruxos.length > 0) {
-        res.status(200).json(bruxos);
-    } else {
-        res.status(404).json({
-            mensagem: "Nenhum bruxo encontrado!"
-        })
+// Get com filtros
+app.get('/bruxos', (req, res) => {
+    const { casa, ano, especialidade, nome } = req.query;
+    let resultado = bruxos;
+  
+    if (casa) {
+      resultado = resultado.filter(b => b.casa.toLowerCase() === casa.toLowerCase());
     }
-})
-
-// Criar a rota GET Casas
-app.get("/casas", (req, res) => {
-    if (casas.length > 0) {
-        res.status(200).json(casas);
-    } else {
-        res.status(404).json({
-            mensagem: "Nenhuma casa encontrada!"
-        })
+  
+    if (ano) {
+      resultado = resultado.filter(b => b.ano == ano);
     }
-})
-
-// Criar a rota GET Varinhas
-app.get("/varinhas", (req, res) => {
-    if (varinhas.length > 0) {
-        res.status(200).json(varinhas);
-    } else {
-        res.status(404).json({
-            mensagem: "Nenhuma varinha encontrada!"
-        })
+  
+    if (especialidade) {
+      resultado = resultado.filter(b => b.especialidade.toLowerCase().includes(especialidade.toLowerCase()));
     }
-})
-
-// Criar a rota GET Animais
-app.get("/animais", (req, res) => {
-    if (animais.length > 0) {
-        res.status(200).json(animais);
-    } else {
-        res.status(404).json({
-            mensagem: "Nenhum animal encontrado!"
-        })
+  
+    if (nome) {
+      resultado = resultado.filter(b => b.nome.toLowerCase().includes(nome.toLowerCase()));
     }
-})
+  
+    res.status(200).json({
+      total: resultado.length,
+      data: resultado
+    });
+});
 
-// Criar a rota GET Poções
-app.get("/pocoes", (req, res) => {
-    if (pocoes.length > 0) {
-        res.status(200).json(pocoes);
-    } else {
-        res.status(404).json({
-            mensagem: "Nenhuma poção encontrada!"
-        })
+//Post
+app.post('/bruxos', (req, res) => {
+    // Acessando dados do body
+    const { nome, casa, ano, especialidade, varinha } = req.body;
+    
+    console.log('Dados recebidos:', req.body);
+    
+    // Validação básica
+    if (!nome || !casa) {
+        return res.status(400).json({
+            success: false,
+            message: "Nome e casa são obrigatórios para um bruxo!"
+        });
     }
-})
-
-// Criar a rota do GetById
-app.get("/bruxos/:id", (req, res) => {
-    //Capturar o id pela URL/LINK da solicitacao
-    const id = parseInt(req.params.id);
-
-    const bruxo = bruxos.find(b => b.id === id);
-
-    if (bruxo) {
-        res.status(200).json(bruxo);
-    } else {
-        res.status(404).json({
-            mensagem: "Bruxo(a) nao encontrado!"
-        })
-    }
-})
-
-// Criar a rota do GetByName
-app.get("/bruxos/nome/:nome", (req, res) => {
-    let nome = req.params.nome;
-    nome = nome.toLowerCase();
-
-    const nomesFiltrados = bruxos.filter(b => b.nome.toLowerCase().includes(nome));
-
-    if (nomesFiltrados) {
-        res.status(200).json(nomesFiltrados);
-    } else {
-        res.status(404).json({
-            mensagem: "Bruxo não encontrado!"
-        })
-    }
-})
-
-// Criar uma rota para ver quem esta vivo
-
-app.get("/bruxos/vivos/sim", (req, res) => {
-    const bruxosVivos = bruxos.filter(b => b.vivo === true);
-
-    if (bruxosVivos) {
-        res.status(200).json(bruxosVivos);
-    } else {
-        res.status(404).json({
-            mensagem: "Não há bruxos vivos!"
-        })
-    }
-})
+    
+    // Criar novo bruxo
+    const novoBruxo = {
+        id: bruxos.length + 1,
+        nome,
+        casa: casa || "Não informada",
+        ano: parseInt(ano) || 1,
+        especialidade: especialidade || "Em desenvolvimento",
+        varinha: varinha || "A ser descoberta",
+        criadoEm: new Date().toISOString()
+    };
+    
+    // Adicionar à lista de bruxos
+    bruxos.push(novoBruxo);
+    
+    res.status(201).json({
+        success: true,
+        message: "Novo bruxo adicionado a Hogwarts!",
+        data: novoBruxo
+    });
+});
 
 // Iniciar o servidor
 app.listen(serverPort, () => {
